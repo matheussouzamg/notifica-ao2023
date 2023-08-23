@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerador de Notificações</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerador de Notificações</h1>
+    <input type="text" id="title" placeholder="Título da Notificação">
+    <input type="text" id="message" placeholder="Mensagem da Notificação">
+    <input type="file" id="image" accept="image/*">
+    <button id="startAutoNotification">Iniciar Disparo Automático</button>
+
+    <script>
+        document.getElementById("startAutoNotification").addEventListener("click", function() {
+            const title = document.getElementById("title").value;
+            const message = document.getElementById("message").value;
+            const image = document.getElementById("image").files[0];
+
+            if (title && message && image) {
+                if ("Notification" in window) {
+                    // Solicitar permissão para enviar notificações
+                    Notification.requestPermission().then(function(permission) {
+                        if (permission === "granted") {
+                            setInterval(function() {
+                                const notification = new Notification(title, {
+                                    body: message,
+                                    icon: URL.createObjectURL(image)
+                                });
+                            }, 5000); // Envia a notificação a cada 5 segundos
+                        }
+                    });
+                } else {
+                    alert("Este navegador não suporta notificações.");
+                }
+            } else {
+                alert("Preencha todos os campos.");
+            }
+        });
+    </script>
+</body>
+</html>
